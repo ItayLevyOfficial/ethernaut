@@ -14,7 +14,7 @@ contract('PriceIt', function (accounts) {
   let player = accounts[0];
 
   before(async function () {
-    ethernaut = await Ethernaut.new();
+    ethernaut = await utils.getEthernautWithStatsProxy();
     level = await PriceItFactory.new();
     await ethernaut.registerLevel(level.address);
   });

@@ -456,7 +456,10 @@
       "levelContract": "PriceItFactory.sol",
       "instanceContract": "PriceIt.sol",
       "instanceGas": 11000000,
-      "author": "itaylevyofficial"
+      "author": "itaylevyofficial",
+      "deployId": "29",
+      "deployParams": [],
+      "deployFunds": 0
     }
   ]
 }
