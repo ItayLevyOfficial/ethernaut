@@ -1,57 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../helpers/uniswap/UniswapV2Pair.sol";
+// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PriceIt.sol";
 import "./base/Level.sol";
-
-contract PriceItFactory is Level {
-  uint256 private constant amount = 100000 ether;
-
-  function createInstance(address) public payable override returns (address) {
-    TestingERC20 token0 = new TestingERC20("Token 0", "TZERO");
-    TestingERC20 token1 = new TestingERC20("Token 1", "TONE");
-    TestingERC20 token2 = new TestingERC20("Token 2", "TTWO");
-    PriceIt level = new PriceIt(token0, token1, token2);
-    token0.mint(address(level), amount);
-    token1.mint(address(level), amount);
-    MockedUniswapV2Factory uniFactory = new MockedUniswapV2Factory();
-    MockedUniswapV2Router02 uniRouter = new MockedUniswapV2Router02(address(uniFactory));
-    createPair(token0, token1, uniFactory, uniRouter);
-    createPair(token0, token2, uniFactory, uniRouter);
-    return address(level);
-  }
-
-  function validateInstance(address payable _instance, address _player) public override returns (bool) {
-    IERC20 token0 = PriceIt(_instance).token0();
-    return token0.balanceOf(_player) > 9000 ether;
-  }
-
-  function createPair(
-    TestingERC20 _token0,
-    TestingERC20 _token1,
-    MockedUniswapV2Factory uniFactory,
-    MockedUniswapV2Router uniRouter
-  ) private {
-    address pair = uniFactory.createPair(address(_token0), address(_token1));
-    _token0.mint(address(this), amount);
-    _token1.mint(address(this), amount);
-    _token0.approve(address(uniRouter), amount);
-    _token1.approve(address(uniRouter), amount);
-    uniRouter.addLiquidity(address(_token0), address(_token1), amount, amount, amount, amount, pair, block.timestamp);
-  }
-}
-
-contract TestingERC20 is Ownable, ERC20 {
-  constructor(string memory _name, string memory _symbol) public Ownable() ERC20(_name, _symbol) {}
-
-  function mint(address account, uint256 amount) external onlyOwner {
-    _mint(account, amount);
-  }
-}
 
 contract MockedUniswapV2Factory {
   mapping(address => mapping(address => address)) public getPair;
@@ -66,7 +19,7 @@ contract MockedUniswapV2Factory {
     assembly {
       pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
     }
-    IUniswapV2Pair(pair).initialize(token0, token1);
+    UniswapV2Pair(pair).initialize(token0, token1);
     getPair[token0][token1] = pair;
     getPair[token1][token0] = pair;
     return pair;
@@ -98,7 +51,7 @@ contract MockedUniswapV2Router {
     address pair = IUniswapV2Factory(factory).getPair(tokenA, tokenB);
     tokenA.transferFrom(msg.sender, pair, amountADesired);
     tokenB.transferFrom(msg.sender, pair, amountADesired);
-    liquidity = IUniswapV2Pair(pair).mint(to);
+    IUniswapV2Pair(pair).mint(to);
   }
 
   function getAmountOut(
@@ -112,5 +65,50 @@ contract MockedUniswapV2Router {
     uint256 numerator = amountInWithFee.mul(reserveOut);
     uint256 denominator = reserveIn.mul(1000).add(amountInWithFee);
     amountOut = numerator / denominator;
+  }
+}
+
+contract PriceItFactory is Level {
+  uint256 private constant amount = 100000 ether;
+
+  function createInstance(address) public payable override returns (address) {
+    TestingERC20 token0 = new TestingERC20("Token 0", "TZERO");
+    TestingERC20 token1 = new TestingERC20("Token 1", "TONE");
+    TestingERC20 token2 = new TestingERC20("Token 2", "TTWO");
+    PriceIt level = new PriceIt(token0, token1, token2);
+    token0.mint(address(level), amount);
+    token1.mint(address(level), amount);
+    MockedUniswapV2Factory uniFactory = new MockedUniswapV2Factory();
+    MockedUniswapV2Router uniRouter = new MockedUniswapV2Router(address(uniFactory));
+    createPair(token0, token1, uniFactory, uniRouter);
+    createPair(token0, token2, uniFactory, uniRouter);
+    return address(level);
+  }
+
+  function validateInstance(address payable _instance, address _player) public override returns (bool) {
+    IERC20 token0 = PriceIt(_instance).token0();
+    return token0.balanceOf(_player) > 9000 ether;
+  }
+
+  function createPair(
+    TestingERC20 _token0,
+    TestingERC20 _token1,
+    MockedUniswapV2Factory uniFactory,
+    MockedUniswapV2Router uniRouter
+  ) private {
+    address pair = uniFactory.createPair(address(_token0), address(_token1));
+    _token0.mint(address(this), amount);
+    _token1.mint(address(this), amount);
+    _token0.approve(address(uniRouter), amount);
+    _token1.approve(address(uniRouter), amount);
+    uniRouter.addLiquidity(address(_token0), address(_token1), amount, amount, amount, amount, pair, block.timestamp);
+  }
+}
+
+contract TestingERC20 is Ownable, ERC20 {
+  constructor(string memory _name, string memory _symbol) public Ownable() ERC20(_name, _symbol) {}
+
+  function mint(address account, uint256 amount) external onlyOwner {
+    _mint(account, amount);
   }
 }

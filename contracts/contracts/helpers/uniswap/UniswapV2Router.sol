@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-pragma solidity =0.8.4;
+pragma solidity ^0.8.0;
 
 //solhint-disable not-rely-on-time
 //solhint-disable var-name-mixedcase
@@ -11,7 +11,7 @@ import "./libraries/TransferHelper.sol";
 
 import "./interfaces/IUniswapV2Router.sol";
 import "./libraries/UniswapV2Library.sol";
-import "./interfaces/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IWETH.sol";
 
 contract UniswapV2Router is IUniswapV2Router {

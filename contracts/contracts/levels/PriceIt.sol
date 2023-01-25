@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../helpers/uniswap/UniswapV2Pair.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Pair.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Factory.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Router01.sol";
