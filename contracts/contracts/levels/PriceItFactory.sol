@@ -27,7 +27,7 @@ contract MockedUniswapV2Factory {
 }
 
 contract MockedUniswapV2Router {
-  address public immutable override factory;
+  address public immutable factory;
 
   modifier ensure(uint256 deadline) {
     require(deadline >= block.timestamp, "UniswapV2Router: EXPIRED");
@@ -39,18 +39,18 @@ contract MockedUniswapV2Router {
   }
 
   function addLiquidity(
-    IERC20 tokenA,
-    IERC20 tokenB,
+    address tokenA,
+    address tokenB,
     uint256 amountADesired,
     uint256 amountBDesired,
     uint256 amountAMin,
     uint256 amountBMin,
     address to,
     uint256 deadline
-  ) external virtual override ensure(deadline) {
+  ) external virtual ensure(deadline) {
     address pair = IUniswapV2Factory(factory).getPair(tokenA, tokenB);
-    tokenA.transferFrom(msg.sender, pair, amountADesired);
-    tokenB.transferFrom(msg.sender, pair, amountADesired);
+    IERC20(tokenA).transferFrom(msg.sender, pair, amountADesired);
+    IERC20(tokenB).transferFrom(msg.sender, pair, amountADesired);
     IUniswapV2Pair(pair).mint(to);
   }
 
@@ -58,12 +58,12 @@ contract MockedUniswapV2Router {
     uint256 amountIn,
     uint256 reserveIn,
     uint256 reserveOut
-  ) public pure virtual override returns (uint256 amountOut) {
+  ) public pure virtual returns (uint256 amountOut) {
     require(amountIn > 0, "UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT");
     require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
-    uint256 amountInWithFee = amountIn.mul(997);
-    uint256 numerator = amountInWithFee.mul(reserveOut);
-    uint256 denominator = reserveIn.mul(1000).add(amountInWithFee);
+    uint256 amountInWithFee = amountIn * 997;
+    uint256 numerator = amountInWithFee * reserveOut;
+    uint256 denominator = (reserveIn * 1000) + (amountInWithFee);
     amountOut = numerator / denominator;
   }
 }
@@ -85,7 +85,7 @@ contract PriceItFactory is Level {
     return address(level);
   }
 
-  function validateInstance(address payable _instance, address _player) public override returns (bool) {
+  function validateInstance(address payable _instance, address _player) public view override returns (bool) {
     IERC20 token0 = PriceIt(_instance).token0();
     return token0.balanceOf(_player) > 9000 ether;
   }
