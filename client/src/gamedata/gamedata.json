@@ -456,7 +456,7 @@
       "completedDescription": "price_it_complete.md",
       "levelContract": "PriceItFactory.sol",
       "instanceContract": "PriceIt.sol",
-      "instanceGas": 5000000,
+      "instanceGas": 12000000,
       "author": "itaylevyofficial",
       "deployId": "29",
       "deployParams": [],

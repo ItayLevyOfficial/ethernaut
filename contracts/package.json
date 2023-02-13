@@ -28,6 +28,7 @@
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.7.2",
     "hardhat-gas-reporter": "^1.0.9"
+    
   },
   "eslintConfig": {
     "extends": "react-app"
