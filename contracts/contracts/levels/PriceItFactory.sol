@@ -7,6 +7,13 @@ import "./PriceItFactoryHelpers.sol";
 
 contract PriceItFactory is Level {
   uint256 private constant amount = 100000 ether;
+  MockedUniswapV2Factory uniFactory;
+  MockedUniswapV2Router uniRouter;
+
+  constructor() {
+    uniFactory = new MockedUniswapV2Factory();
+    uniRouter = new MockedUniswapV2Router(address(uniFactory));
+  }
 
   function createInstance(address) public payable override returns (address) {
     TestingERC20 token0 = new TestingERC20("Token 0", "TZERO");
@@ -15,23 +22,19 @@ contract PriceItFactory is Level {
     PriceIt level = new PriceIt(token0, token1, token2);
     token0.mint(address(level), amount);
     token1.mint(address(level), amount);
-    MockedUniswapV2Factory uniFactory = new MockedUniswapV2Factory();
-    MockedUniswapV2Router uniRouter = new MockedUniswapV2Router(address(uniFactory));
-    createPair(token0, token1, uniFactory, uniRouter);
-    createPair(token0, token2, uniFactory, uniRouter);
+    createPair(token0, token1);
+    createPair(token0, token2);
     return address(level);
   }
 
-  function validateInstance(address payable _instance, address _player) public override returns (bool) {
+  function validateInstance(address payable _instance, address _player) public view override returns (bool) {
     IERC20 token0 = PriceIt(_instance).token0();
     return token0.balanceOf(_player) > 9000 ether;
   }
 
   function createPair(
     TestingERC20 _token0,
-    TestingERC20 _token1,
-    MockedUniswapV2Factory uniFactory,
-    MockedUniswapV2Router uniRouter
+    TestingERC20 _token1
   ) private {
     address pair = uniFactory.createPair(address(_token0), address(_token1));
     _token0.mint(address(this), amount);
