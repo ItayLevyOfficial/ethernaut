@@ -6,9 +6,8 @@ import "../helpers/uniswap/interfaces/IUniswapV2Factory.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Router01.sol";
 
 contract PriceIt {
-  // just want to see it recompiled
-  IUniswapV2Factory public constant uniFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
-  IUniswapV2Router01 public constant uniRouter = IUniswapV2Router01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+  IUniswapV2Factory public uniFactory;
+  IUniswapV2Router01 public uniRouter;
   IERC20 public token0;
   IERC20 public token1;
   IERC20 public token2;
@@ -16,9 +15,17 @@ contract PriceIt {
   constructor(
     IERC20 _token0,
     IERC20 _token1,
-    IERC20 _token2
+    IERC20 _token2,
+    address _uniFactory,
+    address _uniRouter
   ) {
-    (token0, token1, token2) = (_token0, _token1, _token2);
+    (uniFactory, uniRouter, token0, token1, token2) = (
+      IUniswapV2Factory(_uniFactory),
+      IUniswapV2Router01(_uniRouter),
+      _token0,
+      _token1,
+      _token2
+    );
   }
 
   function buyToken(uint256 inputAmount, IERC20 inputToken) external {

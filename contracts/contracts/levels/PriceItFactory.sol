@@ -19,11 +19,11 @@ contract PriceItFactory is Level {
     TestingERC20 token0 = new TestingERC20("Token 0", "TZERO");
     TestingERC20 token1 = new TestingERC20("Token 1", "TONE");
     TestingERC20 token2 = new TestingERC20("Token 2", "TTWO");
-    PriceIt level = new PriceIt(token0, token1, token2);
+    PriceIt level = new PriceIt(token0, token1, token2, address(uniFactory), address(uniRouter));
     token0.mint(address(level), amount);
     token1.mint(address(level), amount);
     createPair(token0, token1);
-    // createPair(token0, token2);
+    createPair(token0, token2);
     return address(level);
   }
 
