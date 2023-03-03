@@ -6,8 +6,14 @@ import "./PriceIt.sol";
 
 contract MockedUniswapV2Factory {
   mapping(address => mapping(address => address)) public getPair;
+  address public feeTo;
 
-  function createPair(address token0, address token1) external returns (address pair) {
+  constructor(address _feeTo) {
+    feeTo = _feeTo;
+  }
+
+  function createPair(address tokenA, address tokenB) external returns (address pair) {
+    (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
     bytes memory bytecode = type(UniswapV2Pair).creationCode;
     bytes32 salt = keccak256(abi.encodePacked(token0, token1));
     assembly {
@@ -32,14 +38,11 @@ contract MockedUniswapV2Router {
     address tokenB,
     uint256 amountADesired,
     uint256 amountBDesired,
-    uint256 amountAMin,
-    uint256 amountBMin,
     address to,
-    uint256 deadline
+    address pair
   ) external virtual {
-    address pair = IUniswapV2Factory(factory).getPair(tokenA, tokenB);
     IERC20(tokenA).transferFrom(msg.sender, pair, amountADesired);
-    IERC20(tokenB).transferFrom(msg.sender, pair, amountADesired);
+    IERC20(tokenB).transferFrom(msg.sender, pair, amountBDesired);
     IUniswapV2Pair(pair).mint(to);
   }
 

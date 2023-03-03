@@ -11,7 +11,7 @@ contract PriceItFactory is Level {
   MockedUniswapV2Router uniRouter;
 
   constructor() {
-    uniFactory = new MockedUniswapV2Factory();
+    uniFactory = new MockedUniswapV2Factory(address(this));
     uniRouter = new MockedUniswapV2Router(address(uniFactory));
   }
 
@@ -23,7 +23,7 @@ contract PriceItFactory is Level {
     token0.mint(address(level), amount);
     token1.mint(address(level), amount);
     createPair(token0, token1);
-    createPair(token0, token2);
+    // createPair(token0, token2);
     return address(level);
   }
 
@@ -32,16 +32,12 @@ contract PriceItFactory is Level {
     return token0.balanceOf(_player) > 9000 ether;
   }
 
-  function createPair(
-    TestingERC20 _token0,
-    TestingERC20 _token1
-  ) private {
+  function createPair(TestingERC20 _token0, TestingERC20 _token1) private {
     address pair = uniFactory.createPair(address(_token0), address(_token1));
     _token0.mint(address(this), amount);
     _token1.mint(address(this), amount);
     _token0.approve(address(uniRouter), amount);
     _token1.approve(address(uniRouter), amount);
-    uniRouter.addLiquidity(address(_token0), address(_token1), amount, amount, amount, amount, pair, block.timestamp);
+    uniRouter.addLiquidity(address(_token0), address(_token1), amount, amount, msg.sender, pair);
   }
 }
-

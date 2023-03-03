@@ -6,6 +6,7 @@ import "../helpers/uniswap/interfaces/IUniswapV2Factory.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Router01.sol";
 
 contract PriceIt {
+  // just want to see it recompiled
   IUniswapV2Factory public constant uniFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
   IUniswapV2Router01 public constant uniRouter = IUniswapV2Router01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
   IERC20 public token0;
