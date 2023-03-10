@@ -1,5 +1,7 @@
 const PriceIt = artifacts.require('./levels/PriceIt.sol');
 const PriceItFactory = artifacts.require('./levels/PriceItFactory.sol');
+const IUniswapV2Factory = artifacts.require('./helpers/uniswap/interfaces/IUniswapV2Factory.sol');
+const IUniswapV2Pair = artifacts.require('./helpers/uniswap/interfaces/IUniswapV2Pair.sol');
 const PriceItAttack = artifacts.require('./attacks/PriceItAttack');
 const { BN, constants, expectEvent, expectRevert } = require('openzeppelin-test-helpers');
 const utils = require('../utils/TestUtils');
@@ -18,18 +20,10 @@ contract('PriceIt', function (accounts) {
   });
 
   it('should fail if the player did not solve the level', async function () {
-    // log the level and instance for debugging
-    console.log('level', level);
-    // print the factory methods
-    console.log('factory', PriceItFactory);
-    console.log('priceit', PriceIt);
     instance = await utils.createLevelInstance(ethernaut, level.address, player, PriceIt);
-    console.log('instance', instance);
     
-    // call done to complete the test
-    // await instance.done();
-    // const completed = await utils.submitLevelInstance(ethernaut, level.address, instance.address, player);
-    // assert.isFalse(completed);
+    const completed = await utils.submitLevelInstance(ethernaut, level.address, instance.address, player);
+    assert.isFalse(completed);
   });
 
   it("should fail if the pairs didn't create", async function () {
@@ -40,7 +34,7 @@ contract('PriceIt', function (accounts) {
       instance.token2(),
       instance.uniFactory(),
     ]);
-    const uniFactory = await UniFactory.at(uniFactoryAddress);
+    const uniFactory = await IUniswapV2Factory.at(uniFactoryAddress);
     const token0_token1 = await uniFactory.getPair(token0, token1);
     const token0_token2 = await uniFactory.getPair(token0, token2);
     assert.notEqual(token0_token1, constants.ZERO_ADDRESS);
@@ -59,10 +53,10 @@ contract('PriceIt', function (accounts) {
       instance.uniFactory(),
     ]);
     const expectedAmount = '100000000000000000000000';
-    const uniFactory = await UniFactory.at(uniFactoryAddress);
+    const uniFactory = await IUniswapV2Factory.at(uniFactoryAddress);
     async function verifyPair(firstToken, secondToken) {
       const pairAddress = await uniFactory.getPair(firstToken, secondToken);
-      const pairContract = await UniPair.at(pairAddress);
+      const pairContract = await IUniswapV2Pair.at(pairAddress);
       const reserves = await pairContract.getReserves();
       assert.equal(reserves.reserve0.toString(), expectedAmount);
       assert.equal(reserves.reserve1.toString(), expectedAmount);

