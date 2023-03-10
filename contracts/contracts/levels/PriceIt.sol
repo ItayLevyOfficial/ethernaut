@@ -3,11 +3,11 @@ pragma solidity ^0.8.0;
 import "../helpers/uniswap/UniswapV2Pair.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Pair.sol";
 import "../helpers/uniswap/interfaces/IUniswapV2Factory.sol";
-import "../helpers/uniswap/interfaces/IUniswapV2Router01.sol";
+import {UniswapV2Router, IUniswapV2Router} from "../helpers/uniswap/UniswapV2Router.sol";
 
 contract PriceIt {
   IUniswapV2Factory public uniFactory;
-  IUniswapV2Router01 public uniRouter;
+  IUniswapV2Router public uniRouter;
   IERC20 public token0;
   IERC20 public token1;
   IERC20 public token2;
@@ -21,7 +21,7 @@ contract PriceIt {
   ) {
     (uniFactory, uniRouter, token0, token1, token2) = (
       IUniswapV2Factory(_uniFactory),
-      IUniswapV2Router01(_uniRouter),
+      IUniswapV2Router(_uniRouter),
       _token0,
       _token1,
       _token2

@@ -5,7 +5,7 @@ import '../levels/PriceIt.sol';
 
 contract PriceItAttack {
   IUniswapV2Factory private uniFactory;
-  IUniswapV2Router01 private uniRouter;
+  IUniswapV2Router private uniRouter;
 
   function doYourThing(PriceIt instance) external {
     IERC20 token0 = instance.token0();

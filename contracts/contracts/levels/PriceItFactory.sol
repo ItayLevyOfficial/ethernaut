@@ -4,15 +4,17 @@ pragma solidity ^0.8.0;
 // import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 // import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PriceItFactoryHelpers.sol";
+import "../helpers/uniswap/UniswapV2Factory.sol";
 
 contract PriceItFactory is Level {
   uint256 private constant amount = 100000 ether;
-  MockedUniswapV2Factory uniFactory;
-  MockedUniswapV2Router uniRouter;
+  IUniswapV2Factory uniFactory;
+  IUniswapV2Router uniRouter;
 
   constructor() {
-    uniFactory = new MockedUniswapV2Factory(address(this));
-    uniRouter = new MockedUniswapV2Router(address(uniFactory));
+    uniFactory = new UniswapV2Factory(address(this));
+    uniFactory.setFeeTo(address(this));
+    uniRouter = new UniswapV2Router(address(uniFactory));
   }
 
   function createInstance(address) public payable override returns (address) {
