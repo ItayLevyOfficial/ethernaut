@@ -14,7 +14,7 @@ contract PriceItFactory is Level {
   constructor() {
     uniFactory = new UniswapV2Factory(address(this));
     uniFactory.setFeeTo(address(this));
-    uniRouter = new UniswapV2Router(address(uniFactory));
+    uniRouter = new UniswapV2Router(address(uniFactory), address(this));
   }
 
   function createInstance(address) public payable override returns (address) {
@@ -40,6 +40,15 @@ contract PriceItFactory is Level {
     _token1.mint(address(this), amount);
     _token0.approve(address(uniRouter), amount);
     _token1.approve(address(uniRouter), amount);
-    uniRouter.addLiquidity(address(_token0), address(_token1), amount, amount, msg.sender, pair);
+    uniRouter.addLiquidity(
+      address(_token0),
+      address(_token1),
+      amount,
+      amount,
+      amount,
+      amount,
+      msg.sender,
+      block.timestamp
+    );
   }
 }
