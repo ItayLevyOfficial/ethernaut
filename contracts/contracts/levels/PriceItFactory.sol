@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 // import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 // import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PriceItFactoryHelpers.sol";
-import "../helpers/uniswap/UniswapV2Factory.sol";
+import { UniswapV2Factory } from "../helpers/uniswap/UniswapV2Factory.sol";
 import "hardhat/console.sol";
 
 contract PriceItFactory is Level {
