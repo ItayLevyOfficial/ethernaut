@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 //solhint-disable reason-string
-
+import "hardhat/console.sol";
 import "../interfaces/IUniswapV2Pair.sol";
 
 library UniswapV2Library {
@@ -49,8 +49,15 @@ library UniswapV2Library {
         address tokenB
     ) internal view returns (uint256 reserveA, uint256 reserveB) {
         (address token0, ) = sortTokens(tokenA, tokenB);
+        // log the factory, token a and token b
+        console.log("factory", factory);
+        console.log("tokenA", tokenA);
+        console.log("tokenB", tokenB);
+        address pair = pairFor(factory, tokenA, tokenB);
+        // log the pair
+        console.log("pair", pair);
         (uint256 reserve0, uint256 reserve1, ) = IUniswapV2Pair(
-            pairFor(factory, tokenA, tokenB)
+            pair
         ).getReserves();
         (reserveA, reserveB) = tokenA == token0
             ? (reserve0, reserve1)

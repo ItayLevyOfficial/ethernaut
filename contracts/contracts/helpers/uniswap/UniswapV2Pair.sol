@@ -6,10 +6,12 @@ import "./interfaces/IUniswapV2Pair.sol";
 import "./UniswapV2ERC20.sol";
 import "./libraries/Math.sol";
 import "./libraries/UQ112x112.sol";
-import "openzeppelin-contracts-08/token/ERC20/ERC20.sol";
+import "./UniswapV2ERC20.sol";
 import "./interfaces/IUniswapV2Factory.sol";
 import "./interfaces/IUniswapV2Callee.sol";
-
+import "./interfaces/IERC20.sol";
+// import the hardhat log
+import "hardhat/console.sol";
 //solhint-disable func-name-mixedcase
 //solhint-disable avoid-low-level-calls
 //solhint-disable reason-string
@@ -50,6 +52,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
             uint32 _blockTimestampLast
         )
     {
+        // log the reserves
+        console.log("reserve0", reserve0);
+        console.log("reserve1", reserve1);
+        // log the block timestamp
+        console.log("blockTimestampLast", blockTimestampLast);
         _reserve0 = reserve0;
         _reserve1 = reserve1;
         _blockTimestampLast = blockTimestampLast;
