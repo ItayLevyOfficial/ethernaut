@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.0;
-import { UniswapV2Pair } from "../helpers/uniswap/UniswapV2Pair.sol";
-import { IERC20 } from "openzeppelin-contracts-08/token/ERC20/IERC20.sol";
-import { IUniswapV2Pair } from "../helpers/uniswap/interfaces/IUniswapV2Pair.sol";
-import { IUniswapV2Factory } from "../helpers/uniswap/interfaces/IUniswapV2Factory.sol";
-import { UniswapV2Router, IUniswapV2Router } from "../helpers/uniswap/UniswapV2Router.sol";
+import { IERC20 } from "openzeppelin-contracts-05/token/ERC20/IERC20.sol";
+import { IUniswapV2Pair } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import { IUniswapV2Factory } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import { IUniswapV2Router02 } from "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
 contract PriceIt {
   IUniswapV2Factory public uniFactory;
-  IUniswapV2Router public uniRouter;
+  IUniswapV2Router02 public uniRouter;
   IERC20 public token0;
   IERC20 public token1;
   IERC20 public token2;
@@ -16,7 +15,7 @@ contract PriceIt {
   constructor(IERC20 _token0, IERC20 _token1, IERC20 _token2, address _uniFactory, address _uniRouter) {
     (uniFactory, uniRouter, token0, token1, token2) = (
       IUniswapV2Factory(_uniFactory),
-      IUniswapV2Router(_uniRouter),
+      IUniswapV2Router02(_uniRouter),
       _token0,
       _token1,
       _token2
