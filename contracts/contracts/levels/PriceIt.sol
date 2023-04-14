@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.5.0;
 import { UniswapV2Pair } from "../helpers/uniswap/UniswapV2Pair.sol";
 import { IERC20 } from "openzeppelin-contracts-08/token/ERC20/IERC20.sol";
 import { IUniswapV2Pair } from "../helpers/uniswap/interfaces/IUniswapV2Pair.sol";
