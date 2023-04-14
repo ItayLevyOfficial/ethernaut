@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import { IERC20 } from "openzeppelin-contracts-05/token/ERC20/IERC20.sol";
 import { IUniswapV2Pair } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import { IUniswapV2Factory } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import { IUniswapV2Router02 } from "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import { IUniswapV2Router02 } from "../helpers/IUniswapV2Router02-05.sol";
 
 contract PriceIt {
   IUniswapV2Factory public uniFactory;
