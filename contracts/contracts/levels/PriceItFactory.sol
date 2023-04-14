@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.0;
 
-import "./PriceItFactoryHelpers.sol";
-import { UniswapV2Factory } from "../helpers/uniswap/UniswapV2Factory.sol";
+import { TestingERC20 } from "./PriceItFactoryHelpers.sol";
+import { UniswapV2Factory } from "@uniswap/v2-core/contracts/UniswapV2Factory.sol";
 import "hardhat/console.sol";
 
 contract PriceItFactory is Level {
@@ -16,7 +16,7 @@ contract PriceItFactory is Level {
     uniRouter = new UniswapV2Router(address(uniFactory), address(this));
   }
 
-  function createInstance(address) public payable override returns (address) {
+  function createInstance(address) public payable returns (address) {
     // log it started running
     console.log("PriceItFactory.createInstance() started");
     TestingERC20 token0 = new TestingERC20("Token 0", "TZERO");
@@ -36,7 +36,7 @@ contract PriceItFactory is Level {
     return address(level);
   }
 
-  function validateInstance(address payable _instance, address _player) public view override returns (bool) {
+  function validateInstance(address payable _instance, address _player) public view returns (bool) {
     IERC20 token0 = PriceIt(_instance).token0();
     return token0.balanceOf(_player) > 9000 ether;
   }
