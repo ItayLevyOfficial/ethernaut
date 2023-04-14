@@ -12,7 +12,7 @@ contract PriceIt {
   IERC20 public token1;
   IERC20 public token2;
 
-  constructor(IERC20 _token0, IERC20 _token1, IERC20 _token2, address _uniFactory, address _uniRouter) {
+  constructor(IERC20 _token0, IERC20 _token1, IERC20 _token2, address _uniFactory, address _uniRouter) public {
     (uniFactory, uniRouter, token0, token1, token2) = (
       IUniswapV2Factory(_uniFactory),
       IUniswapV2Router02(_uniRouter),
